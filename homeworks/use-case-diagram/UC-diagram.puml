@@ -1,0 +1,57 @@
+@startuml
+left to right direction
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor "User" as User
+actor "Admin" as Admin
+
+rectangle "Frontend application for nutrition optimization" {
+
+  (Register) as UC_Register
+  (Log in) as UC_Login
+  (Log out) as UC_Logout
+
+  (Manage nutrition goals) as UC_Goals
+  (Create and manage meals) as UC_Meals
+
+  (Send for optimization) as UC_Optimize
+  (View optimization result) as UC_ViewResult
+  (Track goal progress) as UC_Tracker
+
+  (Manage custom ingredients) as UC_Ingredients
+  (Add ingredient directly) as UC_AddDirect
+  (Add ingredient as a whole) as UC_AddWhole
+  (Create ingredient from ingredients) as UC_AddFromRecipe
+  (Delete custom ingredient) as UC_DeleteIngredient
+
+  (Share custom ingredient database) as UC_ShareDB
+
+  (System administration) as UC_AdminAccess
+  (Manage users) as UC_AdminUsers
+  (Delete logs) as UC_AdminLogs
+}
+
+' --- User ---
+User --> UC_Register
+User --> UC_Login
+User --> UC_Logout
+User --> UC_Goals
+User --> UC_Meals
+User --> UC_Optimize
+User --> UC_ViewResult
+User --> UC_Tracker
+User --> UC_Ingredients
+User --> UC_ShareDB
+
+UC_Ingredients ..> UC_AddDirect : <<include>>
+UC_Ingredients ..> UC_AddWhole : <<include>>
+UC_Ingredients ..> UC_AddFromRecipe : <<include>>
+UC_Ingredients ..> UC_DeleteIngredient : <<include>>
+
+' --- Admin ---
+Admin --> UC_AdminAccess
+Admin --> UC_AdminUsers
+Admin --> UC_AdminLogs
+@enduml
