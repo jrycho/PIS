@@ -1,0 +1,83 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide methods
+
+class Region {
+  - id_region: int
+  - nazev: string
+  - popis: string
+}
+
+class Oblast {
+  - id_oblast: int
+  - nazev: string
+  - popis: string
+}
+
+class Lokalita {
+  - id_lokalita: int
+  - nazev: string
+  - gps: string
+  - popis: string
+  - hodnoceni: float
+  - navstevnost: float
+}
+
+class Skala {
+  - id_skala: int
+  - nazev: string
+  - hodnoceni: float
+  - podminky lezeni: string
+  - pruvodce k sektoru: string
+  - gps: string
+  - orientace: string
+}
+
+class Cesta {
+  - id_cesta: int
+  - nazev: string
+  - klasifikace: string
+  - delka: float
+  - nebezpeci: int
+  - sklon: string
+  - orientace: string
+  - popis: string
+  - autor_prvovystupu: string
+  - datum_prvovystupu: int
+
+}
+
+class TypLezeni {
+  - id_typ_lezeni: int
+  - nazev: string
+}
+
+class TypJisteni {
+  - id_typ_jisteni: int
+  - nazev: string
+}
+
+class TypSlunce {
+  - id_typ_slunce: int
+  - nazev: string
+}
+
+class Fotografie {
+  - id_foto: int
+  - url: string
+  - popis: string
+  - autor: string
+}
+
+
+
+Region "1" -- "0..*" Oblast : obsahuje >
+Oblast "1" -- "0..*" Lokalita : obsahuje >
+Lokalita "1" -- "0..*" Skala : obsahuje >
+Skala "1" -- "0..*" Cesta : obsahuje >
+
+Cesta "0..*" -- "0..*" TypLezeni : ma_typ >
+Cesta "0..*" -- "0..*" TypJisteni : ma_jisteni >
+Cesta "0..*" -- "0..*" TypSlunce : ma_typ_dopadajiciho_slunce >
+Cesta "1" -- "0..*" Fotografie : ma_fotky >
+@enduml
