@@ -7,8 +7,6 @@ Repository containing homework assignments and course materials.
 
 - [Homeworks](#homeworks)
 - [Presentations](#presentations)
-- [Homeworks](#homeworks)
-- [Presentations](#presentations)
 
 ## Homeworks
 
