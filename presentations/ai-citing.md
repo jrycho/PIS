@@ -2017,3 +2017,226 @@ User interactions, backend services, and application logic are outside the scope
 
 
 
+@startuml
+skinparam classAttributeIconSize 0
+hide methods
+
+class Region {
+  - id_region: int
+  - nazev: string
+  - popis: string
+}
+
+class Oblast {
+  - id_oblast: int
+  - nazev: string
+  - popis: string
+}
+
+class Lokalita {
+  - id_lokalita: int
+  - nazev: string
+  - gps: string
+  - popis: string
+  - hodnoceni: float
+  - navstevnost: float
+}
+
+class Skala {
+  - id_skala: int
+  - nazev: string
+  - hodnoceni: float
+  - podminky lezeni: string
+  - pruvodce k sektoru: string
+  - gps: string
+  - orientace: string
+}
+
+class Cesta {
+  - id_cesta: int
+  - nazev: string
+  - klasifikace: string
+  - delka: float
+  - nebezpeci: int
+  - sklon: string
+  - orientace: string
+  - popis: string
+  - autor_prvovystupu: string
+  - datum_prvovystupu: int
+
+}
+
+class TypLezeni {
+  - id_typ_lezeni: int
+  - nazev: string
+}
+
+class TypJisteni {
+  - id_typ_jisteni: int
+  - nazev: string
+}
+
+class TypSlunce {
+  - id_typ_slunce: int
+  - nazev: string
+}
+
+class Fotografie {
+  - id_foto: int
+  - url: string
+  - popis: string
+  - autor: string
+}
+
+
+
+Region "1" -- "0..*" Oblast : obsahuje >
+Oblast "1" -- "0..*" Lokalita : obsahuje >
+Lokalita "1" -- "0..*" Skala : obsahuje >
+Skala "1" -- "0..*" Cesta : obsahuje >
+
+Cesta "0..*" -- "0..*" TypLezeni : ma_typ >
+Cesta "0..*" -- "0..*" TypJisteni : ma_jisteni >
+Cesta "0..*" -- "0..*" TypSlunce : ma_typ_dopadajiciho_slunce >
+Cesta "1" -- "0..*" Fotografie : ma_fotky >
+@enduml according to this add methods youd find fitting
+
+Jasně — tady je doplněná verze s metodami, které dávají smysl k jednotlivým třídám podle jejich role v modelu.
+
+@startuml
+skinparam classAttributeIconSize 0
+
+class Region {
+  - id_region: int
+  - nazev: string
+  - popis: string
+  + pridejOblast(oblast: Oblast): void
+  + odeberOblast(oblast: Oblast): void
+  + ziskejOblasti(): List<Oblast>
+  + aktualizujPopis(popis: string): void
+}
+
+class Oblast {
+  - id_oblast: int
+  - nazev: string
+  - popis: string
+  + pridejLokalitu(lokalita: Lokalita): void
+  + odeberLokalitu(lokalita: Lokalita): void
+  + ziskejLokality(): List<Lokalita>
+  + aktualizujPopis(popis: string): void
+}
+
+class Lokalita {
+  - id_lokalita: int
+  - nazev: string
+  - gps: string
+  - popis: string
+  - hodnoceni: float
+  - navstevnost: float
+  + pridejSkalu(skala: Skala): void
+  + odeberSkalu(skala: Skala): void
+  + ziskejSkaly(): List<Skala>
+  + aktualizujHodnoceni(hodnoceni: float): void
+  + aktualizujNavstevnost(navstevnost: float): void
+  + nastavGps(gps: string): void
+}
+
+class Skala {
+  - id_skala: int
+  - nazev: string
+  - hodnoceni: float
+  - podminky_lezeni: string
+  - pruvodce_k_sektoru: string
+  - gps: string
+  - orientace: string
+  + pridejCestu(cesta: Cesta): void
+  + odeberCestu(cesta: Cesta): void
+  + ziskejCesty(): List<Cesta>
+  + aktualizujHodnoceni(hodnoceni: float): void
+  + nastavOrientaci(orientace: string): void
+  + nastavPodminkyLezeni(podminky: string): void
+}
+
+class Cesta {
+  - id_cesta: int
+  - nazev: string
+  - klasifikace: string
+  - delka: float
+  - nebezpeci: int
+  - sklon: string
+  - orientace: string
+  - popis: string
+  - autor_prvovystupu: string
+  - datum_prvovystupu: int
+  + nastavKlasifikaci(klasifikace: string): void
+  + nastavDelku(delka: float): void
+  + nastavNebezpeci(nebezpeci: int): void
+  + nastavOrientaci(orientace: string): void
+  + aktualizujPopis(popis: string): void
+  + pridejTypLezeni(typ: TypLezeni): void
+  + odeberTypLezeni(typ: TypLezeni): void
+  + pridejTypJisteni(typ: TypJisteni): void
+  + odeberTypJisteni(typ: TypJisteni): void
+  + pridejTypSlunce(typ: TypSlunce): void
+  + odeberTypSlunce(typ: TypSlunce): void
+  + pridejFotografii(foto: Fotografie): void
+  + odeberFotografii(foto: Fotografie): void
+  + ziskejFotografie(): List<Fotografie>
+}
+
+class TypLezeni {
+  - id_typ_lezeni: int
+  - nazev: string
+  + prejmenuj(novyNazev: string): void
+}
+
+class TypJisteni {
+  - id_typ_jisteni: int
+  - nazev: string
+  + prejmenuj(novyNazev: string): void
+}
+
+class TypSlunce {
+  - id_typ_slunce: int
+  - nazev: string
+  + prejmenuj(novyNazev: string): void
+}
+
+class Fotografie {
+  - id_foto: int
+  - url: string
+  - popis: string
+  - autor: string
+  + nastavUrl(url: string): void
+  + aktualizujPopis(popis: string): void
+  + nastavAutora(autor: string): void
+}
+
+Region "1" -- "0..*" Oblast : obsahuje >
+Oblast "1" -- "0..*" Lokalita : obsahuje >
+Lokalita "1" -- "0..*" Skala : obsahuje >
+Skala "1" -- "0..*" Cesta : obsahuje >
+
+Cesta "0..*" -- "0..*" TypLezeni : ma_typ >
+Cesta "0..*" -- "0..*" TypJisteni : ma_jisteni >
+Cesta "0..*" -- "0..*" TypSlunce : ma_typ_dopadajiciho_slunce >
+Cesta "1" -- "0..*" Fotografie : ma_fotky >
+@enduml
+
+Pár poznámek k tomu:
+
+Zvolil jsem hlavně metody pro správu vazeb mezi třídami, protože to je u takového modelu nejpřirozenější.
+
+Dále jsem přidal metody pro aktualizaci důležitých atributů, jako je hodnocení, popis, GPS, klasifikace apod.
+
+U TypLezeni, TypJisteni, TypSlunce jsem nechal jen jednoduchou metodu prejmenuj(...), protože tyto třídy vypadají jako číselníky.
+
+Jedna menší věc: v atributu Skala bych doporučil přejmenovat:
+
+podminky lezeni → podminky_lezeni
+
+pruvodce k sektoru → pruvodce_k_sektoru
+
+protože mezery v názvech atributů nejsou v UML/PlantUML moc vhodné.
+
+Chceš, abych ti udělal ještě i „lepší analytickou verzi“, kde metody budou méně CRUDové a víc doménové?

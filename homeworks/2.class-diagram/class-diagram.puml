@@ -1,0 +1,108 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+
+class User {
+  +userId: int
+  +email: string
+  +passwordHash: string
+  +name: string
+  +isActive: bool
+  +register(): bool
+  +login(email: string, password: string): bool
+  +createMealLog(date: date): MealLog
+  +updateSettings(settings: Settings): void
+}
+
+class Admin {
+  +adminId: int
+  +email: string
+  +passwordHash: string
+  +role: string
+  +isActive: bool
+  +login(email: string, password: string): bool
+  +searchUser(email: string): User
+  +updateUser(user: User): void
+}
+
+class Settings {
+  +settingsId: int
+  +optimizedNutrients: List<String>
+  +goalList: List<float>
+  +excessList: List<float>
+  +slackList: List<float>
+  +setOptimizedNutrients(nutrients: List<String>): void
+  +setGoals(goals: List<float>): void
+  +setExcessWeights(excess: List<float>): void
+  +setSlackWeights(slack: List<float>): void
+  +validateSettings(): bool
+}
+
+class NutritionGoal {
+  +trackerId: int
+  +currentCalories: float
+  +currentProtein: float
+  +currentFat: float
+  +currentCarbs: float
+  +targetCalories: float
+  +targetProtein: float
+  +targetFat: float
+  +targetCarbs: float
+  +updateProgress(): void
+  +calculateDeviation(): float
+  +displayProgress(): void
+}
+
+class MealLog {
+  +mealLogId: int
+  +date: date
+  +status: string
+  +createdAt: datetime
+  +addIngredient(item: MealIngredient): void
+  +removeIngredient(item: MealIngredient): void
+  +updateIngredient(item: MealIngredient): void
+  +produceResult(settings: Settings): OptimizationResult
+}
+
+class MealIngredient {
+  +mealIngredientId: int
+  +quantity: float
+  +quantityType: string
+  +isPieceBased: bool
+  +setQuantity(quantity: float): void
+  +setQuantityType(type: string): void
+  +validateQuantity(): bool
+}
+
+class Ingredient {
+  +ingredientCode: int
+  +name: string
+  +unit: string
+  +caloriesPer100g: float
+  +proteinPer100g: float
+  +fatPer100g: float
+  +carbsPer100g: float
+  +getNutritionValue(amount: float): float
+}
+
+class OptimizationResult {
+  +resultId: int
+  +status: string
+  +createdAt: datetime
+  +objectiveValue: float
+  +message: string
+  +displayResult(): void
+  +isSuccessful(): bool
+}
+
+User "1" -- "0..*" MealLog : creates
+User "1" -- "0..1" Settings : uses
+User "1" -- "0..*" NutritionGoal : tracks
+MealLog "1" *-- "1..*" MealIngredient : contains
+MealIngredient "*" --> "1" Ingredient : references
+MealLog "1" --> "1" Settings : uses
+MealLog "1" -- "0..1" OptimizationResult : produces
+OptimizationResult "*" --> "1" Settings : based on
+Admin ..> User : manages
+@enduml
