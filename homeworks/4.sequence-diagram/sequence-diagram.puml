@@ -1,0 +1,77 @@
+@startuml
+title User Meal Log and Optimization Flow
+
+actor User
+participant "Frontend" as FE
+participant "Backend" as BE
+database "Database" as DB
+
+== Save Settings ==
+User -> FE : Set nutrition settings
+activate FE
+FE -> BE : POST /settings/save_settings
+activate BE
+BE -> DB : Save settings
+activate DB
+DB --> BE : OK
+deactivate DB
+BE --> FE : Settings saved
+deactivate BE
+
+
+== Create Meal Log ==
+User -> FE : Create meal log
+activate FE
+FE -> BE : POST /logs/log_meal
+activate BE
+BE -> DB : Save meal log
+activate DB
+DB --> BE : OK
+deactivate DB
+BE --> FE : Return meal log
+deactivate BE
+FE --> User : Show created meal log
+deactivate FE
+
+== Add Ingredient to Meal Log ==
+User -> FE : Add ingredient
+activate FE
+FE -> BE : POST /logs/add_ingredient/{barcode}
+activate BE
+BE -> DB : Save ingredient into meal log
+activate DB
+DB --> BE : OK
+deactivate DB
+BE --> FE : Return updated meal log
+deactivate BE
+FE --> User : Show updated meal log
+deactivate FE
+
+== Optimize Meal ==
+User -> FE : Click optimize
+activate FE
+FE -> BE : GET /optim/optimize/{meal_id}
+activate BE
+BE -> BE : build_input_object_from_meal_log(meal_id, user_id)
+BE -> BE : get_settings_obj(user_id, meal_type)
+BE -> BE : linprog_optimizer(settings_obj, input_obj)
+BE -> BE : solve()
+BE -> BE : fallback to gwo_optimizer() if needed
+BE -> BE : get_json_results()
+
+BE -> DB : save_optimization_macros_crud(meal_id, user_id, json_total_macros)
+activate DB
+DB --> BE : OK
+deactivate DB
+
+BE -> DB : save_optimization_weights_crud(meal_id, user_id, json_ingredient_weights)
+activate DB
+DB --> BE : OK
+deactivate DB
+
+BE --> FE : Return weights + macros
+deactivate BE
+FE --> User : Render optimized result
+deactivate FE
+
+@enduml
