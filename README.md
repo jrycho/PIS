@@ -31,6 +31,7 @@ This section contains in class presentations created during the semester:
 1. [Use Case Diagram](./homeworks/1.use-case-diagram)
 2. [Class Diagram](./homeworks/2.class-diagram)
 3. [E-R Diagram](./homeworks/3.E-R-diagram)
+4. [Sequence Diagram](./homeworks/4.sequence-diagram)
 
 ## In-Class Work
 
