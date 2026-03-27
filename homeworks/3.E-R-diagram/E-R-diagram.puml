@@ -1,0 +1,114 @@
+@startuml
+hide methods
+hide circle
+skinparam linetype ortho
+
+entity "users" as users {
+  * _id : ObjectId <<PK>>
+  --
+  username : string
+  email : string
+  password : string
+  is_admin : bool
+  created_at : datetime
+  share_key : string
+  shared_keys : array
+}
+
+entity "user_settings" as user_settings {
+  * _id : ObjectId <<PK>>
+  --
+  user_id : ObjectId <<FK>>
+  meals : dict
+  updated_at : datetime
+}
+
+entity "user_goals_collection" as user_goals {
+  * _id : ObjectId <<PK>>
+  --
+  user_id : ObjectId <<FK>>
+  target_macros : dict
+}
+
+entity "user_ingredients_collection" as user_ingredients {
+  * _id : ObjectId <<PK>>
+  --
+  code : string
+  product_name : string
+  nutriments : dict
+  categories_tags : array
+  priority_user : int
+  user_id : ObjectId <<FK>>
+  share_key : string
+}
+
+entity "ingredients_collection" as ingredients {
+  * _id : string <<PK>>
+  --
+  barcode : string
+  categories_tags : array
+  name : string
+  nova_group : int
+  nutrients : dict
+  pnns_groups_1 : string
+  pnns_groups_2 : string
+  priority_auto : int
+}
+
+entity "temp_ingredients_collection" as temp_ingredients {
+  * _id : ObjectId <<PK>>
+  --
+  created_at : datetime
+  ingredients : array
+  user_id : ObjectId <<FK>>
+}
+
+entity "optimized_weights_collection" as optimized_weights {
+  * _id : ObjectId <<PK>>
+  --
+  meal_id : string
+  user_id : ObjectId <<FK>>
+  results : array
+}
+
+entity "optimized_macros_collection" as optimized_macros {
+  * _id : ObjectId <<PK>>
+  --
+  meal_id : string
+  user_id : ObjectId <<FK>>
+  results : dict
+}
+
+entity "meal_logs" as meal_logs {
+  * _id : ObjectId <<PK>>
+  --
+  meal_id : string
+  date : date
+  ingredients : array
+  type_of_meal : string
+  user_id : ObjectId <<FK>>
+}
+
+users ||--|| user_settings : has
+users ||--|| user_goals : has
+users ||--o{ user_ingredients : owns
+users ||--|| temp_ingredients : has
+users ||--o{ optimized_weights : has
+users ||--o{ optimized_macros : has
+users ||--o{ meal_logs : logs
+
+user_ingredients ..> users : user_id
+user_settings ..> users : user_id
+user_goals ..> users : user_id
+temp_ingredients ..> users : user_id
+optimized_weights ..> users : user_id
+optimized_macros ..> users : user_id
+meal_logs ..> users : user_id
+
+meal_logs ..> optimized_weights : meal_id
+meal_logs ..> optimized_macros : meal_id
+meal_logs ..> user_ingredients : ingredients[].barcode
+meal_logs ..> ingredients : ingredients[].barcode
+optimized_weights ..> meal_logs : meal_id
+optimized_macros ..> meal_logs : meal_id
+@enduml
