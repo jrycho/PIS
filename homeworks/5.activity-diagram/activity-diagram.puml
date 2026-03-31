@@ -1,0 +1,69 @@
+@startuml
+skinparam defaultFontSize 18
+
+start
+
+:Initialize optimizer;
+note right
+Load:
+- settings
+- input_list
+- is_indivisible
+- user_designated_values
+- n
+- n_in
+end note
+
+:Create objective vector c;
+note right
+Ingredient variables -> 0
+Slack variables -> slack weights
+Excess variables -> excess weights
+end note
+
+:Create equality matrix A_eq;
+note right
+Build food-property matrix
+and expand it as:
+
+[A_food | I | -I]
+end note
+
+:Create bounds;
+note right
+For each ingredient:
+- fixed value -> (val, val)
+- priority 1 -> (0.1, ∞)
+- otherwise -> (0.1, 2)
+
+Deviation variables:
+(0, ∞)
+end note
+
+if (Any indivisible ingredient?) then (no)
+  :Run linprog once;
+  :Store solution;
+  :Set update_flag = False;
+else (yes)
+  :Run initial linprog;
+  :Extract ingredient solution;
+
+  :Keep only indivisible values;
+  :Convert to portion counts;
+  :Apply minimum threshold 0.5;
+  :Round to integer portions;
+  :Convert rounded portions to weights;
+
+  :Update bounds;
+  note right
+  Nonzero rounded indivisible values
+  are fixed in filtered bounds
+  end note
+
+  :Run second linprog;
+  :Store solution;
+  :Set update_flag = False;
+endif
+
+stop
+@enduml
