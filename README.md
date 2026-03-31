@@ -32,6 +32,7 @@ This section contains in class presentations created during the semester:
 2. [Class Diagram](./homeworks/2.class-diagram)
 3. [E-R Diagram](./homeworks/3.E-R-diagram)
 4. [Sequence Diagram](./homeworks/4.sequence-diagram)
+5. [Activity Diagram](./homeworks/5.activity-diagram)
 
 ## In-Class Work
 
