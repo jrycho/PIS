@@ -1,0 +1,28 @@
+@startuml
+title linprog_optimizer - State Diagram
+
+[*] --> Initialized
+
+state Initialized
+state Ready
+state Solving
+state Solved
+state Failed
+state Dirty
+
+Initialized --> Ready : object created\nsolution = None\nupdate_flag = false
+
+Ready --> Solving : solve()\nget_solution()\nget_json_results()
+Solving --> Solved : solution.success == true
+Solving --> Failed : solution == None\nor success == false
+
+Solved --> Solved : get_solution()\nget_json_results()
+Failed --> Solving : get_solution()\nget_json_results()
+
+Solved --> Dirty : set_input_list()\nset_settings()
+Failed --> Dirty : set_input_list()\nset_settings()
+Ready --> Dirty : set_input_list()\nset_settings()
+
+Dirty --> Ready : A_matrix_actualize()\nupdate_flag = true
+
+@enduml
