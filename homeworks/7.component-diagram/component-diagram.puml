@@ -1,0 +1,51 @@
+@startuml
+title API Component Diagram
+
+package "Client Layer" {
+    [Next.js Frontend] as FE
+}
+
+package "Backend Layer" {
+    [FastAPI Backend] as API
+
+    [Login Routes] as LOGIN
+    [Users Routes] as USERS
+    [User Functions] as USERFUNC
+    [Meal Logs Routes] as MEALLOGS
+    [Optimization Routes] as OPT
+    [Settings Routes] as SETTINGS
+    [Tracker Routes] as TRACKER
+    [Testing Routes] as TESTING
+}
+
+package "Database Layer" {
+    database "MongoDB Atlas\n(AtlasDB)" as DB
+}
+
+package "External Services" {
+    [Open Food Facts API\n(OFF API)] as OFF
+}
+
+FE --> API : HTTP / JSON
+
+API --> LOGIN
+API --> USERS
+API --> USERFUNC
+API --> MEALLOGS
+API --> OPT
+API --> SETTINGS
+API --> TRACKER
+API --> TESTING
+
+LOGIN --> DB : authentication data
+USERS --> DB : user data
+USERFUNC --> DB : user operations
+MEALLOGS --> DB : meals / logs
+OPT --> DB : settings + ingredients
+SETTINGS --> DB : nutrition settings
+TRACKER --> DB : progress / history
+
+FE <--> OFF : product search / lookup
+API <--> OFF : barcode / product data
+
+@enduml
